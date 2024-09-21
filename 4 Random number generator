@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'dart:math';
+
+void main() {
+  runApp(RandomNumberGeneratorApp());
+}
+
+class RandomNumberGeneratorApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Random Number Generator',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: RandomNumberGeneratorHome(),
+    );
+  }
+}
+
+class RandomNumberGeneratorHome extends StatefulWidget {
+  @override
+  _RandomNumberGeneratorHomeState createState() => _RandomNumberGeneratorHomeState();
+}
+
+class _RandomNumberGeneratorHomeState extends State<RandomNumberGeneratorHome> {
+  final Random _random = Random();
+  String _output = '';
+
+  void _generateRandomNumber() {
+    int randomInt = _random.nextInt(100); // Random integer from 0 to 99
+    setState(() {
+      _output = 'Random Integer: $randomInt';
+    });
+  }
+
+  void _generateRandomDouble() {
+    double randomDouble = _random.nextDouble(); // Random double [0.0, 1.0)
+    setState(() {
+      _output = 'Random Double: $randomDouble';
+    });
+  }
+
+  void _generateRandomInRange(int min, int max) {
+    int randomInRange = min + _random.nextInt(max - min + 1);
+    setState(() {
+      _output = 'Random number in range [$min, $max]: $randomInRange';
+    });
+  }
+
+  void _generateUniqueRandomNumbers(int count, int max) {
+    if (count > max) {
+      setState(() {
+        _output = 'The number of unique numbers cannot exceed $max';
+      });
+      return;
+    }
+
+    Set<int> uniqueNumbers = {};
+    while (uniqueNumbers.length < count) {
+      uniqueNumbers.add(_random.nextInt(max));
+    }
+
+    setState(() {
+      _output = 'Unique Random Numbers: ${uniqueNumbers.toList()}';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Random Number Generator'),
+      ),
+      body: Center( 
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: _generateRandomNumber,
+                child: Text('Random Integer (0-99)'),
+              ),
+              SizedBox(height: 20), 
+              ElevatedButton(
+                onPressed: _generateRandomDouble,
+                child: Text('Random Double (0.0-1.0)'),
+              ),
+              SizedBox(height: 20), 
+              ElevatedButton(
+                onPressed: () => _generateRandomInRange(10, 50),
+                child: Text('Random number in range [10, 50]'),
+              ),
+              SizedBox(height: 20), 
+              ElevatedButton(
+                onPressed: () => _generateUniqueRandomNumbers(5, 20),
+                child: Text('5 Unique Random Numbers (0-20)'),
+              ),
+              SizedBox(height: 20), 
+              Text(
+                _output,
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
